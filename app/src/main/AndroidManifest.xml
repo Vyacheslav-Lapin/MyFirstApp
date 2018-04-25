@@ -30,8 +30,12 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity" />
+            <!--<intent-filter />-->
         </activity>
+        
+        <!--<service android:name="com.example.myfirstapp.SecretService"/>-->
 
     </application>
 
+    
 </manifest>

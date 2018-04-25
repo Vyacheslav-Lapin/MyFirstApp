@@ -28,6 +28,7 @@ android {
 configurations {
     testImplementation.extendsFrom compileOnly
     annotationProcessor.extendsFrom implementation
+    annotationProcessor.extendsFrom compileOnly
 }
 
 dependencies {

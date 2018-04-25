@@ -9,20 +9,23 @@ import android.widget.EditText;
 
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
+import lombok.experimental.NonFinal;
 import lombok.val;
 
-@FieldDefaults(level = AccessLevel.PRIVATE)
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class MainActivity extends AppCompatActivity {
 
-    public static final String EXTRA_MESSAGE = "com.example.myfirstapp.MESSAGE";
-    static final Log log = new Log("MainActivity");
+    public static String EXTRA_MESSAGE = "com.example.myfirstapp.MESSAGE";
+    static Log log = new Log("MainActivity");
 
-    private RetainedFragment dataFragment;
+    @NonFinal
+    RetainedFragment dataFragment;
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        log.i("configuration was changed. Config - " + newConfig);
+        log.i("configuration was changed (onConfigurationChanged called)." +
+                " Config - " + newConfig);
     }
 
     @Override
@@ -30,19 +33,15 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        log.i("Мама мыла раму");
+        log.i("onCreate called!");
 
-        // find the retained fragment on activity restarts
-        val fm = getFragmentManager();
+        val fm = getFragmentManager(); // find the retained fragment on activity restarts
         dataFragment = (RetainedFragment) fm.findFragmentByTag("data");
 
-        // create the fragment and data the first time
-        if (dataFragment == null) {
-            // add the fragment
-            dataFragment = new RetainedFragment();
+        if (dataFragment == null) { // create the fragment and data the first tim
+            dataFragment = new RetainedFragment(); // add the fragment
             fm.beginTransaction().add(dataFragment, "data").commit();
-            // load the data from the web
-            dataFragment.setData(loadMyData());
+            dataFragment.setData(loadMyData()); // load the data from the web
         }
 
         // the data is available in dataFragment.getData()
@@ -52,13 +51,9 @@ public class MainActivity extends AppCompatActivity {
         return null; // TODO: 25/04/2018
     }
 
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-//        outState.
-    }
-
-    /** Called when the user taps the Send button */
+    /**
+     * Called when the user taps the Send button
+     */
     public void sendMessage(View view) {
         val intent = new Intent(
                 this,
@@ -67,6 +62,15 @@ public class MainActivity extends AppCompatActivity {
         EditText editText = findViewById(R.id.editText);
         String message = editText.getText().toString().trim().intern();
         intent.putExtra(EXTRA_MESSAGE, message);
-        startActivity(intent);
+        startActivityForResult(intent, 1);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (data == null)
+            return;
+        String name = data.getStringExtra("name");
+        log.i("Your name is " + name);
     }
 }
