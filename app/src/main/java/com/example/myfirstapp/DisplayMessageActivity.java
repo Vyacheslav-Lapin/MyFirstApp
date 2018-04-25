@@ -4,9 +4,11 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.TextView;
 
-import lombok.val;
+import static com.example.myfirstapp.MainActivity.EXTRA_MESSAGE;
 
 public class DisplayMessageActivity extends AppCompatActivity {
+
+    TextView textView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -14,10 +16,12 @@ public class DisplayMessageActivity extends AppCompatActivity {
         setContentView(R.layout.activity_display_message);
 
         // Get the Intent that started this activity and extract the string
-        val intent = getIntent();
-        String message = intent.getStringExtra(MainActivity.EXTRA_MESSAGE);
+        String message = getIntent().getStringExtra(EXTRA_MESSAGE);
+
         // Capture the layout's TextView and set the string as its text
-        TextView textView = findViewById(R.id.textView);
+        if (textView == null)
+            textView = findViewById(R.id.textView);
+
         textView.setText(message);
     }
 }
