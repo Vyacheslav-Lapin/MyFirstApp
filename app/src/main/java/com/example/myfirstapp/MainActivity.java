@@ -70,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (data == null)
             return;
-        String name = data.getStringExtra("name");
-        log.i("Your name is " + name);
+        String message = data.getStringExtra(EXTRA_MESSAGE);
+        log.i("Your message is " + message);
     }
 }
